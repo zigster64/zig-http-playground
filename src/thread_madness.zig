@@ -1,3 +1,7 @@
+// This file is called thread_madness for a reason
+// Its only there to deliberate overload the server, and find out where it breaks in different scenarios
+// DO NOT use this as a model for your shiny new Zig web framework !!
+
 const std = @import("std");
 const enums = @import("enums.zig");
 const handler = @import("handler.zig");

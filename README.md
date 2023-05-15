@@ -45,13 +45,16 @@ make run-single
 ## Thread Modes
 
 singlethread - simple and fast, just do the accept() / handler() in a simple loop.
-https://github.com/zigster64/zig-http-playground/blob/main/src/single_thread.zig
+[a single_thread.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/single_thread.zig)
 
 threadpool2 - accept in a loop, run the handlers in a threadpool of 2 threads
+[a thread_poolzig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig)
 
 threadpoolmax - accept in a loop, run the handlers in a threadpool of std.Thread.getCpuCount() threads
+[a thread_pool.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig)
 
 theadperconnection - accept in a loop, spawn a whole new thread for each connection, to see where it melts down.  Dont do this in production !
+[a thread_madness.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_madness.zig)
 
 ## File IO Modes
 

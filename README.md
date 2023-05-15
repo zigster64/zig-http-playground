@@ -59,7 +59,7 @@ code - simple Zig code to read the file using stdlib, and write the contents to 
 os - open the file using Zig stdlib, but then use the std.os.sendfile() to get the kernel to do the IO from the file to the socket
 
 
-## Benchmark Results
+## Benchmark Run
 
 Mac M2 pro / 16GB
 
@@ -71,16 +71,17 @@ Hitting the server with
 - Duration 10 seconds
 - Benchmark mode (no delay between requests)
 
+## Benchmark Results
+
+
 - Transactions = Transactions per second
 - Throughput = MB per sec
 - Concurrency = Avg number of active simultaneous users
 
-|Mode|Transactions|Throughput|Concurrency|KeepAlive Transactions|Keepalive Throughput|Keepalive Concurrency|
-|----|------------|----------|-----------|
-
-|singlethread|1632|7.0|4.63|3220|14.66|1.97|
-
-|----|------------|----------|-----------|
+| Mode               | Transactions | Throughput | Concurrency | KeepAlive Transactions | Keepalive Throughput | Keepalive Concurrency |
+| ------------------ | ------------ |-- -------- | ----------- |----------------------- | -------------------- | --------------------- |
+| singlethread      | 1632 | 7.0 | 4.63 | 3220 | 14.66 | 1.97 |
+| ------------------ | ------------ |-- -------- | ----------- |----------------------- | -------------------- | --------------------- |
 
 
 ### threadpool2

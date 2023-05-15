@@ -1,2 +1,6 @@
+# zig artifacts
 zig-cache
 zig-out
+
+# rust artifacts
+target

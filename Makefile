@@ -2,8 +2,20 @@ all:
 	@echo Make options
 	@cat Makefile
 
+clean: zig-clean rust-clean
+
+zig-clean:
+	rm -rf zig-out zig-cache
+
+rust-clean:
+	rm -rf rust-server/target
+
 zig-build:
-	zig build -freference-trace
+	zig build -freference-trace -Doptimize=ReleaseFast
+	ls -ltra zig-out/bin
+
+rust-build:
+	cd rust-server && cargo build && cargo build --release && ls -ltra target/debug/rust-server target/release/rust-server
 
 run-single: zig-build
 	zig-out/bin/zig-http-playground singlethread code 8080

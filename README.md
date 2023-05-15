@@ -73,19 +73,33 @@ Hitting the server with
 
 ## Benchmark Results
 
+WARNING - benchmarks are benchmarks ... dont go reading too much into the results, just use them to get a rough understanding of what goes where.
+
+Figures can vary wildly from run to run.
+
+There doesnt seem to be any significant difference between compiling with debug vs compiling with releaseFast on the Zig side.
+
+Rust is marginally better on release build vs debug build.
+
+Surprised that the Go stdlib doesnt handle keepalive !!
+Or that nodejs serve / python http.server also dont handle keepalive.
+
 - Transactions = Transactions per second
 - Throughput = MB per sec
 - Concurrency = Avg number of active simultaneous users
 
-Other non-Zig Things on same machine to benchmark against
+### Other non-Zig Things on same machine to benchmark against
 
 | Mode               | Trans/Sec | MB/s | Conc | Keepalive/Sec | Keepalive MB/s | Keepalive Con |
 | :---               |      ---: | ---: |  --: |          ---: |           ---: |          ---: |
 | nodejs serve       | 1516 | 0.07 | 5.41 | FAIL | FAIL | FAIL |
-| python3 -m http.server | 1606 | 6.89 | 4.22 | FAIL | FAIL | FAIL |
-| go run go/main.go | 1551 | 3.33 | 3.80 | FAIL | FAIL | FAIL | 
+| python3 | 1606 | 6.89 | 4.22 | FAIL | FAIL | FAIL |
+| go  | 1551 | 3.33 | 3.80 | FAIL | FAIL | FAIL | 
+| rust debug | 1143 | 4.90 | 4.42 | N/A | N/A | N/A |
+| rust release | 1596 | 6.85 | 4.54 | N/A | N/A | N/A |
 
-Using Zig File IO
+
+### Using Zig File IO 
 
 | Mode               | Trans/Sec | MB/s | Conc | Keepalive/Sec | Keepalive MB/s | Keepalive Con |
 | :---               |      ---: | ---: |  --: |          ---: |           ---: |          ---: |
@@ -94,7 +108,7 @@ Using Zig File IO
 | threadpoolmax      | 1096 | 4.70 | 4.94 | 2644 | 11.34 | 9.98 |
 | threadmadness      | 570 | 2.44 | 8.99 | 2652 | 11.37 | 9.98 |
 
-Using std.os.sendfile 
+### Zig Using std.os.sendfile 
 
 | Mode               | Trans/Sec | MB/s | Conc | Keepalive/Sec | Keepalive MB/s | Keepalive Con |
 | :---               |      ---: | ---: |  --: |          ---: |           ---: |          ---: |

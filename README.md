@@ -1,5 +1,10 @@
 # zig-http-playground
+
 Playground for different ways of configuring and using Zig std.http.Server
+
+Use this for experimenting and benchmarking different options
+
+Not intended for production use - this is just a playground to see whats fast, what isnt, and what breaks under load
 
 ## Install / Build
 
@@ -40,6 +45,7 @@ make run-single
 ## Thread Modes
 
 singlethread - simple and fast, just do the accept() / handler() in a simple loop.
+https://github.com/zigster64/zig-http-playground/blob/main/src/single_thread.zig
 
 threadpool2 - accept in a loop, run the handlers in a threadpool of 2 threads
 

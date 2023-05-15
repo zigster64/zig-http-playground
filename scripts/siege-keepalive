@@ -1,0 +1,2 @@
+#!bash
+siege -R <(echo connection = keep-alive) -t 10S -c 10 -b http://localhost:8080

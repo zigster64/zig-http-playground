@@ -1,24 +1,45 @@
 const std = @import("std");
+const usage = @import("usage.zig").print;
+const enums = @import("enums.zig");
+
+const singleThreadedServer = @import("single_thread.zig");
+const threadPerConnectionServer = @import("thread_madness.zig");
+const threadPoolServer = @import("thread_pool.zig");
 
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
     std.debug.print("All your {s} are belong to us.\n", .{"std.http.Server"});
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    const args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
 
-    try bw.flush(); // don't forget to flush!
-}
+    if (args.len != 4) return usage();
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+    const port = try std.fmt.parseInt(u16, args[3], 10);
+
+    var thread_mode = std.meta.stringToEnum(enums.ThreadModes, args[1]) orelse return usage();
+    var file_mode = std.meta.stringToEnum(enums.FileModes, args[2]) orelse return usage();
+
+    switch (thread_mode) {
+        .singlethread => {
+            std.debug.print("Singlethread mode\n", .{});
+            try singleThreadedServer.run(port, file_mode);
+        },
+        .threadperconnection => {
+            std.debug.print("Spawn a new thread per new connection, should go real quick, then die in a meltdown\n", .{});
+            try threadPerConnectionServer.run(file_mode, port);
+        },
+        .threadpool2 => {
+            std.debug.print("Use a pair of threadpools - should be less throughput than singlethread, but better concurrency\n", .{});
+            try threadPoolServer.run(2, file_mode, port);
+        },
+        .threadpoolmax => {
+            std.debug.print("Use a pool of as many threads as there are CPU cores - should be bit quicker than 2 threads, with much better concurrency\n", .{});
+            try threadPoolServer.run(try std.Thread.getCpuCount(), file_mode, port);
+        },
+    }
+    std.debug.print("Serving files on port {}\n", .{port});
 }

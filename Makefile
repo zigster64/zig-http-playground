@@ -15,7 +15,7 @@ run-poolmax: zig-build
 	zig-out/bin/zig-http-playground threadpoolmax code 8080
 
 run-threads: zig-build
-	zig-out/bin/zig-http-playground threadperconnection code 8080
+	zig-out/bin/zig-http-playground threadmadness code 8080
 
 os-single: zig-build
 	zig-out/bin/zig-http-playground singlethread os 8080
@@ -27,7 +27,7 @@ os-poolmax: zig-build
 	zig-out/bin/zig-http-playground threadpoolmax os 8080
 
 os-threads: zig-build
-	zig-out/bin/zig-http-playground threadperconnection os 8080
+	zig-out/bin/zig-http-playground threadmadness os 8080
 
 siege:
 	scripts/siege-std

@@ -3,7 +3,7 @@ const usage = @import("usage.zig").print;
 const enums = @import("enums.zig");
 
 const singleThreadedServer = @import("single_thread.zig");
-const threadPerConnectionServer = @import("thread_madness.zig");
+const threadMadnessServer = @import("thread_madness.zig");
 const threadPoolServer = @import("thread_pool.zig");
 
 pub fn main() !void {
@@ -28,17 +28,18 @@ pub fn main() !void {
             std.debug.print("Singlethread mode\n", .{});
             try singleThreadedServer.run(port, file_mode);
         },
-        .threadperconnection => {
+        .threadmadness => {
             std.debug.print("Spawn a new thread per new connection, should go real quick, then die in a meltdown\n", .{});
-            try threadPerConnectionServer.run(file_mode, port);
+            try threadMadnessServer.run(file_mode, port);
         },
         .threadpool2 => {
             std.debug.print("Use a pair of threadpools - should be less throughput than singlethread, but better concurrency\n", .{});
             try threadPoolServer.run(2, file_mode, port);
         },
         .threadpoolmax => {
-            std.debug.print("Use a pool of as many threads as there are CPU cores - should be bit quicker than 2 threads, with much better concurrency\n", .{});
-            try threadPoolServer.run(try std.Thread.getCpuCount(), file_mode, port);
+            var num_threads = try std.Thread.getCpuCount();
+            std.debug.print("Use a pool of as many threads as there are CPU cores (using {})\n", .{num_threads});
+            try threadPoolServer.run(num_threads, file_mode, port);
         },
     }
     std.debug.print("Serving files on port {}\n", .{port});

@@ -19,7 +19,7 @@ zig build
 
 `zig-http-playground THREADMODE FILE-IO-MODE PORT`
 
-Where `THREADMODE` in singlethread, threadpool2, threadpoolmax, threadperconnection
+Where `THREADMODE` in singlethread, threadpool2, threadpoolmax, threadmadness
 
 Where `FILE-IO-MODE` in code, os
 
@@ -44,17 +44,13 @@ make run-single
 
 ## Thread Modes
 
-singlethread - simple and fast, just do the accept() / handler() in a simple loop.
-[a single_thread.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/single_thread.zig)
+[singlethread](https://github.com/zigster64/zig-http-playground/blob/main/src/single_thread.zig) - simple and fast, just do the accept() / handler() in a simple loop.
 
-threadpool2 - accept in a loop, run the handlers in a threadpool of 2 threads
-[a thread_poolzig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig)
+[threadpool2](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig) - accept in a loop, run the handlers in a threadpool of 2 threads
 
-threadpoolmax - accept in a loop, run the handlers in a threadpool of std.Thread.getCpuCount() threads
-[a thread_pool.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig)
+[threadpoolmax](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_pool.zig) - accept in a loop, run the handlers in a threadpool of std.Thread.getCpuCount() threads
 
-theadperconnection - accept in a loop, spawn a whole new thread for each connection, to see where it melts down.  Dont do this in production !
-[a thread_madness.zig](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_madness.zig)
+[threadmadness](https://github.com/zigster64/zig-http-playground/blob/main/src/thread_madness.zig) - accept in a loop, spawn a whole new thread for each connection, to see where it melts down.  Dont do this in production !
 
 ## File IO Modes
 
@@ -63,29 +59,29 @@ code - simple Zig code to read the file using stdlib, and write the contents to 
 os - open the file using Zig stdlib, but then use the std.os.sendfile() to get the kernel to do the IO from the file to the socket
 
 
-## Benchmarks - Zig File IO, using simple connections vs keepalives
+## Benchmark Results
 
 Mac M2 pro / 16GB
 
+Hitting the server with 
+
 `siege -t 10S -c 10  -b http://localhost:8080/`
 
-Concurrency 10 users
-Duration 10 seconds
-Benchmark mode (no delay between requests)
+- Concurrency 10 users
+- Duration 10 seconds
+- Benchmark mode (no delay between requests)
 
+- Transactions = Transactions per second
+- Throughput = MB per sec
+- Concurrency = Avg number of active simultaneous users
 
-### singlethread
-Comments - this should give good avg performance
+|Mode|Transactions|Throughput|Concurrency|KeepAlive Transactions|Keepalive Throughput|Keepalive Concurrency|
+|----|------------|----------|-----------|
 
-Transaction rate:	     1632.27 trans/sec
-Throughput:		        7.00 MB/sec
-Concurrency:		        4.63
+|singlethread|1632|7.0|4.63|3220|14.66|1.97|
 
-- with keepalive :
+|----|------------|----------|-----------|
 
-Transaction rate:	     3420.11 trans/sec
-Throughput:		       14.66 MB/sec
-Concurrency:		        1.97
 
 ### threadpool2
 Comments - this should slightly less throughput, but slightly better concurrency

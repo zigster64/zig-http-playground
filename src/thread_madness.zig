@@ -19,10 +19,6 @@ pub fn run(file_mode: enums.FileModes, port: u16) !void {
         const res = try server.accept(.{ .allocator = allocator });
         // in thread madness mode, spawn a whole new thread for every single connection !!
         // This unconstrained threading will quickly bring the machine to its knees when it gets a tonne of requests
-
-        // make a copy of the response just in case its external lifecycle is on the stack and gets colbbered each accept
-        var response_clone = try allocator.create(std.http.Server.Response);
-        _ = response_clone;
         switch (file_mode) {
             .code => {
                 spawn_thread(handler.handle, res, allocator, "Thread Madness with Zig file IO") catch |err| std.debug.print("handler failed with {}\n", .{err});

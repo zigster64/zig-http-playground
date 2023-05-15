@@ -77,6 +77,14 @@ Hitting the server with
 - Throughput = MB per sec
 - Concurrency = Avg number of active simultaneous users
 
+Other non-Zig Things on same machine to benchmark against
+
+| Mode               | Trans/Sec | MB/s | Conc | Keepalive/Sec | Keepalive MB/s | Keepalive Con |
+| :---               |      ---: | ---: |  --: |          ---: |           ---: |          ---: |
+| nodejs serve       | 1516 | 0.07 | 5.41 | FAIL | FAIL | FAIL |
+| python3 -m http.server | 1606 | 6.89 | 4.22 | FAIL | FAIL | FAIL |
+| go run go/main.go | 1551 | 3.33 | 3.80 | FAIL | FAIL | FAIL | 
+
 Using Zig File IO
 
 | Mode               | Trans/Sec | MB/s | Conc | Keepalive/Sec | Keepalive MB/s | Keepalive Con |

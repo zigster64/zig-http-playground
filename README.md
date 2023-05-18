@@ -1,10 +1,13 @@
 # zig-http-playground
 
-Playground for different ways of configuring and using Zig std.http.Server
+Playground for different ways of configuring and using Zig std.http.Server 
+(using the new std.http.Server library in zig 0.11.x)
 
 Use this for experimenting and benchmarking different options
 
 Not intended for production use - this is just a playground to see whats fast, what isnt, and what breaks under load
+
+You will need to be running the latest 0.11.x dev version of Zig to play with this
 
 ## Install / Build
 
